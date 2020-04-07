@@ -29,4 +29,5 @@ if (isset($_POST['cliente']) && $_POST['cliente'] == 1) {
     }
 } else if (isset($_POST['fornecedor']) && $_POST['fornecedor'] == 1) {
     //fornecedor tentando logar
+    
 }

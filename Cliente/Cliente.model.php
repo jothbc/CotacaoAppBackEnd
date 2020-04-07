@@ -7,6 +7,7 @@ class Cliente
     private $company_name;
     private $cnpj;
     private $tel, $tel2;
+    private $utlimo_pedido;
 
     public function __set($attr, $value)
     {

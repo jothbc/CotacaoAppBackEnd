@@ -36,7 +36,7 @@ class ClienteService
             $stmt = $this->conexao->prepare($sql);
             $stmt->bindValue(1,$this->cliente->__get('id'));
             $stmt->execute();
-            return $stmt->fetch(PDO::FETCH_OBJ);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
         }catch(PDOException $e){
             echo '<p class = "text-danger">' . $e->getMessage() . '</p>';
         }
@@ -44,6 +44,33 @@ class ClienteService
 
     public function update()
     {
+        try {
+            $sql = 'update 
+                        cliente 
+                    set 
+                        email = :email, 
+                        pass = :pass, 
+                        company_name = :comp, 
+                        cnpj = :cnpj,
+                        tel = :tel,
+                        tel_2 = :tel2,
+                        ultimo_pedido = :ultimo_pedido
+                    where
+                        id = :id';
+            $stmt = $this->conexao->prepare($sql);
+            $stmt->bindValue(':email', $this->cliente->__get('email'));
+            $stmt->bindValue(':pass', $this->cliente->__get('pass'));
+            $stmt->bindValue(':comp', $this->cliente->__get('company_name'));
+            $stmt->bindValue(':cnpj', $this->cliente->__get('cnpj'));
+            $stmt->bindValue(':tel', $this->cliente->__get('tel'));
+            $stmt->bindValue(':tel2', $this->cliente->__get('tel2'), null != $this->cliente->__get('tel2') ? PDO::PARAM_STR : PDO::PARAM_NULL );
+            $stmt->bindValue(":ultimo_pedido",$this->cliente->__get('ultimo_pedido'));
+            $stmt->bindValue(":id",$this->cliente->__get('id'));
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_OBJ);
+        } catch (PDOException $e) {
+            echo '<p class = "text-danger">' . $e->getMessage() . '</p>';
+        }
     }
 
     public function delete()
@@ -62,4 +89,6 @@ class ClienteService
             echo '<p class = "text-danger">' . $e->getMessage() . '</p>';
         }
     }
+
+    
 }
