@@ -17,7 +17,8 @@ class ProdutoService
             $sql = 'insert into produto (descricao) values(?)';
             $stmt = $this->conexao->prepare($sql);
             $stmt->bindValue(1, $this->produto->__get('descricao'));
-            return $stmt->execute();
+            $stmt->execute();
+            return $this->conexao->lastInsertId();
         } catch (PDOException $e) {
             echo '<p>' . $e->getMessage() . '</p>';
         }
