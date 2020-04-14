@@ -23,7 +23,7 @@ class ClienteService
             $stmt->bindValue(':tel', $this->cliente->__get('tel'));
             $stmt->bindValue(':tel2', $this->cliente->__get('tel2'), null != $this->cliente->__get('tel2') ? PDO::PARAM_STR : PDO::PARAM_NULL );
             $stmt->execute();
-            return $stmt->fetch(PDO::FETCH_OBJ);
+            return $this->conexao->lastInsertId();
         } catch (PDOException $e) {
             echo '<p class = "text-danger">' . $e->getMessage() . '</p>';
         }

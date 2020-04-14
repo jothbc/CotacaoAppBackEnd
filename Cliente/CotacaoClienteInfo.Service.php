@@ -65,7 +65,41 @@ class CotacaoClienteInfoService
 
     public function update()
     {
+        try{
+            $sql = 'UPDATE 
+                        cotacao_cliente_info 
+                    SET
+                        cliente_id = ?,
+                        pedido = ?,
+                        `status` = ?
+                    WHERE 
+                        id = ?';
+            $stmt = $this->conexao->prepare($sql);
+            $stmt->bindValue(1,$this->cotacao->__get('cliente_id'));
+            $stmt->bindValue(2,$this->cotacao->__get('pedido'));
+            $stmt->bindValue(3,$this->cotacao->__get('status'));
+            $stmt->bindValue(4,$this->cotacao->__get('id'));
+            return $stmt->execute();
+        }catch(PDOException $e){
+            echo '<p>' . $e->getMessage() . '</p>';
+        }
+    }
 
+    public function alterStatus(){
+        try{
+            $sql = 'UPDATE 
+                        cotacao_cliente_info 
+                    SET
+                        `status` = !`status`
+                    WHERE 
+                        cliente_id= ? AND pedido = ?';
+            $stmt = $this->conexao->prepare($sql);
+            $stmt->bindValue(1,$this->cotacao->__get('cliente_id'));
+            $stmt->bindValue(2,$this->cotacao->__get('pedido'));
+            return $stmt->execute();
+        }catch(PDOException $e){
+            echo '<p>' . $e->getMessage() . '</p>';
+        }
     }
     public function delete()
     {
