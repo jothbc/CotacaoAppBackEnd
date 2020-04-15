@@ -52,3 +52,4 @@ if (isset($_POST['cliente']) && $_POST['cliente'] == 1) {
    }
     
 }
+?>

@@ -1,7 +1,7 @@
 <?php
 class Conexao
 {
-    private $host = '192.168.0.158';
+    private $host = 'localhost';
     private $dbname = 'php_pedidos';
     private $user = 'root';
     private $pass = '';
