@@ -9,6 +9,25 @@
             $this->conexao = $conexao->conectar();
         }
 
+        public function getStatusPedido(){
+            try{
+                $sql = 'SELECT 
+                            `status`
+                        FROM 
+                            cotacao_cliente_info
+                        WHERE 
+                            cliente_id = ? AND
+                            pedido = ?';
+                $stmt = $this->conexao->prepare($sql);
+                $stmt->bindValue(1,$this->lista->__get('cliente_id'));
+                $stmt->bindValue(2,$this->lista->__get('pedido_id'));
+                $stmt->execute();
+                return $stmt->fetch(PDO::FETCH_ASSOC);
+            }catch(PDOException $e){
+                echo '<p>'.$e->getMessage().'</p>';
+            }
+        }
+
         public function getListCliente(){
             try{
                 $sql = 'SELECT 

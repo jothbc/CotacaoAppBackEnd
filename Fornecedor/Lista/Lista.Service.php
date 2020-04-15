@@ -29,13 +29,29 @@ class ListaService
             echo '<p>'.$e->getMessage().'</p>';
         }
     }
-    public function read()
-    {
-        
+    
+    public function alterar_status_item_aprovado(){
+        try{
+            $sql = 'UPDATE
+                        cotacao_fornecedor_lista
+                    SET
+                        aprovado = !aprovado
+                    WHERE
+                        fornecedor_id = :fornecedor_id AND
+                        cliente_id = :cliente_id AND
+                        pedido_id = :pedido_id AND
+                        produto_id =:produto_id';
+            $stmt = $this->conexao->prepare($sql);
+            $stmt->bindValue(":fornecedor_id",$this->lista->__get('fornecedor_id'));
+            $stmt->bindValue(":cliente_id",$this->lista->__get('cliente_id'));
+            $stmt->bindValue(":pedido_id",$this->lista->__get('pedido_id'));
+            $stmt->bindValue(":produto_id",$this->lista->__get('produto_id'));
+            return $stmt->execute();
+        }catch(PDOException  $e){
+            echo '<p>'.$e->getMessage().'</p>';
+        }
     }
-    public function update()
-    {
-    }
+
     public function delete()
     {
         try{
