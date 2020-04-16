@@ -104,11 +104,23 @@ class CotacaoClienteInfoService
     public function delete()
     {
         try{
-            $sql = 'delete from cotacao_cliente_info where cliente_id = ? and pedido = ?';
+            $sql = 'DELETE FROM cotacao_cliente_info WHERE cliente_id = ? AND pedido = ?';
             $stmt = $this->conexao->prepare($sql);
             $stmt->bindValue(1,$this->cotacao->__get('cliente_id'));
             $stmt->bindValue(2,$this->cotacao->__get('pedido'));
             return $stmt->execute();
+        }catch(PDOException $e){
+            echo '<p>' . $e->getMessage() . '</p>';
+        }
+    }
+    public function getStatus(){
+        try{
+            $sql = 'SELECT `status` FROM cotacao_cliente_info WHERE cliente_id = ? AND pedido = ?';
+            $stmt = $this->conexao->prepare($sql);
+            $stmt->bindValue(1,$this->cotacao->__get('cliente_id'));
+            $stmt->bindValue(2,$this->cotacao->__get('pedido'));
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
         }catch(PDOException $e){
             echo '<p>' . $e->getMessage() . '</p>';
         }

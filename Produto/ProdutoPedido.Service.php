@@ -20,17 +20,31 @@
                 $stmt->bindValue(1,$this->produtoPedido->__get('cliente_id'));
                 $stmt->bindValue(2,$this->produtoPedido->__get('pedido_id'));
                 $stmt->bindValue(3,$this->produtoPedido->__get('produto_id'));
-                return $stmt->execute();
+                $stmt->execute();
+                return $this->conexao->lastInsertId();
             }catch(PDOException $e){
                 echo '<p>'.$e->getMessage().'</p>';
             }
         }
         public function read(){
-            
+            try{
+                $sql = 'SELECT 
+                            co.*,p.descricao
+                        FROM 
+                            cotacao_cliente_lista AS co LEFT JOIN produto AS p
+                        ON
+                            (co.produto_id = p.id)
+                        WHERE
+                            co.id = ?';
+                $stmt = $this->conexao->prepare($sql);
+                $stmt->bindValue(1,$this->produtoPedido->__get('id'));
+                $stmt->execute();
+                return $stmt->fetch(PDO::FETCH_OBJ);
+            }catch(PDOException $e){
+                echo '<p>'.$e->getMessage().'</p>';
+            }
         }
-        public function update(){
-            
-        }
+        
         public function delete(){
             try{
                 $sql = 'DELETE FROM  

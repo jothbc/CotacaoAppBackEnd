@@ -37,7 +37,14 @@ class ProdutoService
             }
         }else if($attr == 'descricao'){
             try {
-                $sql = "SELECT * FROM produto where descricao like '%".$this->produto->__get('descricao')."%'";
+                $sql = "SELECT 
+                            * 
+                        FROM 
+                            produto 
+                        WHERE 
+                            descricao like '%".$this->produto->__get('descricao')."%'
+                        ORDER BY
+                            descricao";
                 $stmt = $this->conexao->prepare($sql);
                 $stmt->execute();
                 return $stmt->fetchAll(PDO::FETCH_ASSOC);
