@@ -1,4 +1,5 @@
 <?php
+    session_start();
     if (!isset($_SESSION['id']) || !isset($_SESSION['company_name'])) {
         session_destroy();
         header("Location: ../index.php?erro=login");

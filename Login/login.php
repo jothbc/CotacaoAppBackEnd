@@ -1,9 +1,9 @@
 <?php
 session_start();
-require_once "../../../app_cotacao/Cliente/Cliente.model.php";
-require_once "../../../app_cotacao/Cliente/ClienteService.php";
-require_once "../../../app_cotacao/Fornecedor/Fornecedor.model.php";
-require_once "../../../app_cotacao/Fornecedor/Fornecedor.Service.php";
+require_once "../../app_cotacao/Cliente/Cliente.model.php";
+require_once "../../app_cotacao/Cliente/ClienteService.php";
+require_once "../../app_cotacao/Fornecedor/Fornecedor.model.php";
+require_once "../../app_cotacao/Fornecedor/Fornecedor.Service.php";
 
 if (!isset($_POST['email']) && !isset($_POST['senha'])) {
     session_destroy();
