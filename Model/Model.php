@@ -1,6 +1,4 @@
 <?php
-    require_once '../app_cotacao/Connection.php';
-
     abstract  class Model{
         protected $con;
         protected $id;

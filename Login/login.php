@@ -24,11 +24,10 @@ if (isset($_POST['cliente']) && $_POST['cliente'] == 1) {
         $_SESSION['authenticate'] = 'yes';
         $_SESSION['id'] = $auth['id'];
         $_SESSION['company_name'] = $auth['company_name'];
-
-        header("Location: ../Cliente/index.php");
+        echo 'success';
     }else{
         session_destroy();
-        header("Location: ../index.php?erro=usuario");
+        echo 'fail';
     }
 } else if (isset($_POST['fornecedor']) && $_POST['fornecedor'] == 1) {
    //fornecedor tentando logar
@@ -44,11 +43,10 @@ if (isset($_POST['cliente']) && $_POST['cliente'] == 1) {
        $_SESSION['authenticate'] = 'yes';
        $_SESSION['id'] = $auth['id'];
        $_SESSION['company_name'] = $auth['company_name'];
-        // print_r($_SESSION);
-       header("Location: ../Fornecedor/index.php");
+       echo 'success';
    }else{
        session_destroy();
-       header("Location: ../index.php?erro=usuario");
+       echo 'fail';
    }
     
 }

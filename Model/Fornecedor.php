@@ -1,5 +1,4 @@
 <?php
-    require_once '../app_cotacao/Model/Model.php';
 
     class Fornecedor extends Model{
 

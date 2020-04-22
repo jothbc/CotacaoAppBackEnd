@@ -1,9 +1,8 @@
 <?php
-require_once '../app_cotacao/Model/Model.php';
 
 class Cliente extends Model
 {
-    private $ultimo_pedido;
+    protected $ultimo_pedido;
 
     public function autenticar(){
         try {
@@ -67,6 +66,71 @@ class Cliente extends Model
         } catch (\PDOException $e) {
             echo $e;
         }
+    }
+
+    public function getPedidos(){
+        try{
+            $query = 'SELECT
+                        co.id,
+                        co.pedido,
+                        co.status,
+                        st.descricao
+                    FROM
+                        cotacao_cliente_info as co
+                        LEFT JOIN status_pedido as st
+                    ON 
+                        (co.status = st.id)
+                    WHERE
+                        co.cliente_id = :cliente_id';
+            $stmt = $this->con->prepare($query);
+            $stmt->bindValue(':cliente_id',$this->__get('id'));
+            $stmt->execute();
+            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }catch(\PDOException $e){
+
+        }
+    }
+
+    public function getTotalPedidos(){
+        try{
+            $query = 'SELECT
+                        count(*) as total
+                    FROM
+                        cotacao_cliente_info
+                    WHERE
+                        cliente_id = :cliente_id';
+            $stmt = $this->con->prepare($query);
+            $stmt->bindValue(':cliente_id',$this->__get('id'));
+            $stmt->execute();
+            return $stmt->fetch(\PDO::FETCH_ASSOC);
+        }catch(\PDOException $e){
+
+        }
+    }
+
+    public function getItensPedido(){
+        try{
+            $query = 'SELECT
+                        co.id,
+                        co.produto_id,
+                        p.descricao
+                    FROM
+                        cotacao_cliente_lista as co
+                        LEFT JOIN produto as p
+                    ON 
+                        (co.produto_id = p.id)
+                    WHERE
+                        co.cliente_id = :cliente_id AND
+                        co.pedido_id = :pedido_id';
+            $stmt = $this->con->prepare($query);
+            $stmt->bindValue(':cliente_id',$this->__get('id'));
+            $stmt->bindValue(':pedido_id',$this->__get('ultimo_pedido'));
+            $stmt->execute();
+            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }catch(\PDOException $e){
+
+        }
+
     }
 }
 
