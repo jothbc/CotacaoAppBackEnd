@@ -121,7 +121,9 @@ class Cliente extends Model
                         (co.produto_id = p.id)
                     WHERE
                         co.cliente_id = :cliente_id AND
-                        co.pedido_id = :pedido_id';
+                        co.pedido_id = :pedido_id
+                    ORDER BY
+                        p.descricao';
             $stmt = $this->con->prepare($query);
             $stmt->bindValue(':cliente_id',$this->__get('id'));
             $stmt->bindValue(':pedido_id',$this->__get('ultimo_pedido'));
@@ -130,7 +132,71 @@ class Cliente extends Model
         }catch(\PDOException $e){
 
         }
+    }
+    public function removerItemPedido($index){
+       try{
+            $query = 'DELETE FROM cotacao_cliente_lista WHERE id = :id AND cliente_id = :cliente_id';
+            $stmt = $this->con->prepare($query);
+            $stmt->bindValue(':id',$index);
+            $stmt->bindValue(':cliente_id',$this->__get('id'));
+            return $stmt->execute();
+       }catch(\PDOException $e){
 
+       }
+    }
+
+    public function removerPedido(){
+        try{
+            $query = 'DELETE FROM cotacao_fornecedor_lista WHERE pedido_id = :pedido_id AND cliente_id = :cliente_id';
+            $stmt = $this->con->prepare($query);
+            $stmt->bindValue(':pedido_id',$this->__get('ultimo_pedido'));
+            $stmt->bindValue(':cliente_id',$this->__get('id'));
+            $stmt->execute();
+
+            $query = 'DELETE FROM cotacao_cliente_lista WHERE pedido_id = :pedido_id AND cliente_id = :cliente_id';
+            $stmt = $this->con->prepare($query);
+            $stmt->bindValue(':pedido_id',$this->__get('ultimo_pedido'));
+            $stmt->bindValue(':cliente_id',$this->__get('id'));
+            $stmt->execute();
+
+            $query = 'DELETE FROM cotacao_cliente_info WHERE pedido = :pedido_id AND cliente_id = :cliente_id';
+            $stmt = $this->con->prepare($query);
+            $stmt->bindValue(':pedido_id',$this->__get('ultimo_pedido'));
+            $stmt->bindValue(':cliente_id',$this->__get('id'));
+            $stmt->execute();
+
+            return true;
+       }catch(\PDOException $e){
+            return false;
+       }
+    }
+
+    public function novoPedido(){
+        try{
+            $query = 'SELECT ultimo_pedido FROM cliente WHERE id = :id';
+            $stmt = $this->con->prepare($query);
+            $stmt->bindValue(':id',$this->__get('id'));
+            $stmt->execute();
+            
+            $ultimo_pedido = $stmt->fetch(\PDO::FETCH_ASSOC)['ultimo_pedido'];
+            $ultimo_pedido++;
+
+            $query = 'UPDATE cliente SET ultimo_pedido = :ultimo_pedido WHERE id = :id';
+            $stmt = $this->con->prepare($query);
+            $stmt->bindValue(':ultimo_pedido',$ultimo_pedido);
+            $stmt->bindValue(':id',$this->__get('id'));
+            $stmt->execute();
+
+            $query = 'INSERT INTO cotacao_cliente_info(cliente_id,pedido) VALUES(:cliente_id,:pedido)';
+            $stmt = $this->con->prepare($query);
+            $stmt->bindValue(':cliente_id',$this->__get('id'));
+            $stmt->bindValue(':pedido',$ultimo_pedido);
+            $stmt->execute();
+
+            return $ultimo_pedido;
+        }catch(\PDOException $e){
+            return -1;
+        }
     }
 }
 
