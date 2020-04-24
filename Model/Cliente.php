@@ -45,6 +45,22 @@ class Cliente extends Model
             echo $e;
         }
     }
+    public function getClientePorCNPJ(){
+        try {
+            $query = 'SELECT 
+                            id,company_name,cnpj
+                        FROM 
+                            cliente
+                        WHERE 
+                            cnpj = ?';
+            $stmt = $this->con->prepare($query);
+            $stmt->bindValue(1, $this->__get('cnpj'));
+            $stmt->execute();
+            return $stmt->fetch(\PDO::FETCH_ASSOC);
+        } catch (\PDOException $e) {
+            echo $e;
+        }
+    }
 
     public function cadastrar(){
         try {

@@ -11,7 +11,6 @@
         }
 
         if($opcao == 'cliente'){
-            require_once '../app_cotacao/Model/Cliente.php';
             $cliente = new Cliente();
             $cliente->__set('email',$email);
             $cliente->__set('pass',md5($senha));
@@ -27,11 +26,12 @@
                 echo 'fail';
             }
         }else if($opcao == 'fornecedor'){
-            require_once '../app_cotacao/Model/Fornecedor.php';
             $fornecedor = new Fornecedor();
             $fornecedor->__set('email',$email);
             $fornecedor->__set('pass',md5($senha));
+
             $fornecedor->autenticar();
+
             if(!empty($fornecedor->__get('id')) && !empty($fornecedor->__get('company_name'))){
                 session_start();
                 $_SESSION['id'] = $fornecedor->__get('id');
