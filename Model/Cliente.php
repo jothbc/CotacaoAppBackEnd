@@ -214,6 +214,137 @@ class Cliente extends Model
             return -1;
         }
     }
+
+    public function getStatusPedido(){
+        try{
+            $query = 'SELECT
+                            status
+                        FROM 
+                            cotacao_cliente_info 
+                        WHERE 
+                            cliente_id = :cliente_id AND
+                            pedido = :pedido';
+            $stmt = $this->con->prepare($query);
+            $stmt->bindValue(':cliente_id',$this->__get('id'));
+            $stmt->bindValue(':pedido',$this->__get('ultimo_pedido'));
+            $stmt->execute();
+            return $stmt->fetch(\PDO::FETCH_ASSOC);
+       }catch(\PDOException $e){
+
+       }
+    }
+
+    public function alterarStatusPedido(){
+        try{
+            $query = 'UPDATE
+                            cotacao_cliente_info 
+                        SET 
+                            status = !status 
+                        WHERE 
+                            cliente_id = :cliente_id AND
+                            pedido = :pedido';
+            $stmt = $this->con->prepare($query);
+            $stmt->bindValue(':cliente_id',$this->__get('id'));
+            $stmt->bindValue(':pedido',$this->__get('ultimo_pedido'));
+            return $stmt->execute();
+       }catch(\PDOException $e){
+
+       }
+    }
+
+    public function getValorCotadoParaProduto($produto_id){
+        try{
+            $query = 'SELECT
+                            co.valor,
+                            co.fornecedor_id,
+                            co.aprovado,
+                            co.obs,
+                            fo.company_name
+                        FROM
+                            cotacao_fornecedor_lista as co
+                            LEFT JOIN fornecedor as fo
+                        ON
+                            (co.fornecedor_id = fo.id)
+                        WHERE
+                            co.cliente_id = :cliente_id AND
+                            co.pedido_id = :pedido_id AND
+                            co.produto_id = :produto_id';
+            $stmt = $this->con->prepare($query);
+            $stmt->bindValue(':cliente_id',$this->__get('id'));
+            $stmt->bindValue(':pedido_id',$this->__get('ultimo_pedido'));
+            $stmt->bindValue(':produto_id',$produto_id);
+            $stmt->execute();
+            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }catch(\PDOException $e){
+
+        }
+    }
+
+    public function aprovarDesaprovar($fornecedor_id,$produto_id){
+        try{
+            $query = 'UPDATE
+                        cotacao_fornecedor_lista
+                    SET
+                        aprovado = !aprovado
+                    WHERE
+                        fornecedor_id = :fornecedor_id AND
+                        pedido_id = :pedido_id AND
+                        cliente_id = :cliente_id AND
+                        produto_id = :produto_id';
+            $stmt = $this->con->prepare($query);
+            $stmt->bindValue(':fornecedor_id',$fornecedor_id);
+            $stmt->bindValue(':pedido_id',$this->__get('ultimo_pedido'));
+            $stmt->bindValue(':cliente_id',$this->__get('id'));
+            $stmt->bindValue(':produto_id',$produto_id);
+            return $stmt->execute();
+        }catch(\PDOException $e){
+
+        }
+    }
+    public function incluirObs($fornecedor_id,$produto_id,$obs){
+        try{
+            $query = 'UPDATE
+                        cotacao_fornecedor_lista
+                    SET
+                        obs = :obs
+                    WHERE
+                        fornecedor_id = :fornecedor_id AND
+                        pedido_id = :pedido_id AND
+                        cliente_id = :cliente_id AND
+                        produto_id = :produto_id';
+            $stmt = $this->con->prepare($query);
+            $stmt->bindValue(':fornecedor_id',$fornecedor_id);
+            $stmt->bindValue(':pedido_id',$this->__get('ultimo_pedido'));
+            $stmt->bindValue(':cliente_id',$this->__get('id'));
+            $stmt->bindValue(':produto_id',$produto_id);
+            $stmt->bindValue(':obs',$obs);
+            return $stmt->execute();
+        }catch(\PDOException $e){
+
+        }
+    }
+    public function getObs($fornecedor_id,$produto_id){
+        try{
+            $query = 'SELECT
+                            obs
+                        FROM
+                            cotacao_fornecedor_lista
+                        WHERE
+                            fornecedor_id = :fornecedor_id AND
+                            pedido_id = :pedido_id AND
+                            cliente_id = :cliente_id AND
+                            produto_id = :produto_id';
+            $stmt = $this->con->prepare($query);
+            $stmt->bindValue(':fornecedor_id',$fornecedor_id);
+            $stmt->bindValue(':pedido_id',$this->__get('ultimo_pedido'));
+            $stmt->bindValue(':cliente_id',$this->__get('id'));
+            $stmt->bindValue(':produto_id',$produto_id);
+            $stmt->execute();
+            return $stmt->fetch(\PDO::FETCH_ASSOC);
+        }catch(\PDOException $e){
+
+        }
+    }
 }
 
 ?>
