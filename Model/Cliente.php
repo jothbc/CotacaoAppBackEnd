@@ -28,6 +28,18 @@ class Cliente extends Model
         }
     }
 
+    public function getMinhasInfos(){
+        try{
+            $query = "SELECT email, company_name, cnpj ,tel, tel_2 FROM cliente WHERE id = ?";
+            $stmt = $this->con->prepare($query);
+            $stmt->bindValue(1,$this->__get('id'));
+            $stmt->execute();
+            return $stmt->fetch(\PDO::FETCH_ASSOC);
+        }catch(\PDOException $e){
+            echo '<p>'.$e->getMessage().'</p>';
+        }
+    }
+
     public function getClientePorEmail(){
         try {
             $query = 'SELECT 
@@ -45,6 +57,7 @@ class Cliente extends Model
             echo $e;
         }
     }
+
     public function getClientePorCNPJ(){
         try {
             $query = 'SELECT 
@@ -129,7 +142,8 @@ class Cliente extends Model
             $query = 'SELECT
                         co.id,
                         co.produto_id,
-                        p.descricao
+                        p.descricao,
+                        co.pretencao
                     FROM
                         cotacao_cliente_lista as co
                         LEFT JOIN produto as p
@@ -149,6 +163,7 @@ class Cliente extends Model
 
         }
     }
+
     public function removerItemPedido($index){
        try{
             $query = 'DELETE FROM cotacao_cliente_lista WHERE id = :id AND cliente_id = :cliente_id';
@@ -301,6 +316,7 @@ class Cliente extends Model
 
         }
     }
+
     public function incluirObs($fornecedor_id,$produto_id,$obs){
         try{
             $query = 'UPDATE
@@ -323,6 +339,7 @@ class Cliente extends Model
 
         }
     }
+
     public function getObs($fornecedor_id,$produto_id){
         try{
             $query = 'SELECT
@@ -344,6 +361,28 @@ class Cliente extends Model
         }catch(\PDOException $e){
 
         }
+    }
+
+    public function setPretencao($produto_index,$pretencao){
+        try{
+            $query = "UPDATE
+                            cotacao_cliente_lista
+                        SET
+                            pretencao = :pretencao
+                        WHERE 
+                            cliente_id = :cliente_id AND
+                            pedido_id = :pedido_id AND
+                            id = :produto_index";
+            $stmt = $this->con->prepare($query);
+            $stmt->bindValue(":pretencao",$pretencao);
+            $stmt->bindValue(":cliente_id",$this->__get('id'));
+            $stmt->bindValue(":pedido_id",$this->__get('ultimo_pedido'));
+            $stmt->bindValue(":produto_index",$produto_index);
+            return $stmt->execute();
+        }catch(\PDOException $e){
+
+        }
+        
     }
 }
 
