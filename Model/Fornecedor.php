@@ -60,7 +60,9 @@
                         ON
                             (fo.cliente_id = cl.id)
                         WHERE 
-                            fo.fornecedor_id = :id';
+                            fo.fornecedor_id = :id
+                        ORDER BY 
+                            cl.company_name';
                 $stmt = $this->con->prepare($query);
                 $stmt->bindValue(':id',$this->__get('id'));
                 $stmt->execute();

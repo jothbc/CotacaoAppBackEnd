@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 24-Abr-2020 às 21:08
+-- Tempo de geração: 06-Maio-2020 às 18:38
 -- Versão do servidor: 10.4.11-MariaDB
 -- versão do PHP: 7.4.1
 
@@ -41,19 +41,6 @@ CREATE TABLE `cliente` (
   `ultimo_pedido` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Extraindo dados da tabela `cliente`
---
-
-INSERT INTO `cliente` (`id`, `email`, `pass`, `company_name`, `cnpj`, `tel`, `tel_2`, `ultimo_pedido`) VALUES
-(1, 'adm.supercorreia@gmail.com', '30d411fdc0e6daf092a74354094359bb', 'Supermercado Correia', 20555189000196, '33666407', NULL, 2),
-(3, 'jothbc@gmail.com', '887caadc3642e304ede659b734f79b00', 'JCR', 123456789, '+5547997432978', NULL, 0),
-(5, 'denyanserafini@hotmail.com', '202cb962ac59075b964b07152d234b70', 'denyan', 3132131321231321, '321321321', NULL, 0),
-(6, 'raysllabartou18@gmail.com', '202cb962ac59075b964b07152d234b70', 'Rayslla', 321321321321, '+5547997432978', NULL, 0),
-(7, 'joth_bc@gmail.com', '202cb962ac59075b964b07152d234b70', '21212', 321321321321321, '3213213213212', NULL, 0),
-(8, 'adm@teste.com.br', '202cb962ac59075b964b07152d234b70', 'asdasd', 2000000000000000, '999999999', NULL, 0),
-(9, 'b@test.com', '202cb962ac59075b964b07152d234b70', 'iuqweoi', 154464654654654546, '888888888', NULL, 0);
-
 -- --------------------------------------------------------
 
 --
@@ -67,13 +54,6 @@ CREATE TABLE `cotacao_cliente_info` (
   `status` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Extraindo dados da tabela `cotacao_cliente_info`
---
-
-INSERT INTO `cotacao_cliente_info` (`id`, `cliente_id`, `pedido`, `status`) VALUES
-(2, 1, 1, 1),
-(3, 1, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -85,32 +65,10 @@ CREATE TABLE `cotacao_cliente_lista` (
   `id` int(11) NOT NULL,
   `cliente_id` int(11) NOT NULL,
   `pedido_id` int(11) NOT NULL,
-  `produto_id` int(11) NOT NULL
+  `produto_id` int(11) NOT NULL,
+  `pretencao` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Extraindo dados da tabela `cotacao_cliente_lista`
---
-
-INSERT INTO `cotacao_cliente_lista` (`id`, `cliente_id`, `pedido_id`, `produto_id`) VALUES
-(28, 1, 1, 2105),
-(29, 1, 1, 209),
-(30, 1, 1, 215),
-(31, 1, 1, 1784),
-(32, 1, 1, 1947),
-(33, 1, 1, 82),
-(34, 1, 1, 1104),
-(35, 1, 1, 1133),
-(36, 1, 2, 1054),
-(37, 1, 2, 1058),
-(38, 1, 2, 1059),
-(39, 1, 2, 1066),
-(40, 1, 2, 1179),
-(41, 1, 2, 1168),
-(42, 1, 2, 1154),
-(43, 1, 2, 2307),
-(44, 1, 2, 2910),
-(45, 1, 1, 830);
 
 -- --------------------------------------------------------
 
@@ -124,9 +82,12 @@ CREATE TABLE `cotacao_fornecedor_lista` (
   `pedido_id` int(11) NOT NULL,
   `cliente_id` int(11) NOT NULL,
   `produto_id` int(11) NOT NULL,
-  `valor` double NOT NULL,
-  `aprovado` tinyint(1) DEFAULT 0
+  `valor` double(6,2) UNSIGNED NOT NULL,
+  `aprovado` tinyint(1) DEFAULT 0,
+  `obs` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
 
 -- --------------------------------------------------------
 
@@ -144,15 +105,6 @@ CREATE TABLE `fornecedor` (
   `tel_2` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Extraindo dados da tabela `fornecedor`
---
-
-INSERT INTO `fornecedor` (`id`, `email`, `pass`, `company_name`, `cnpj`, `tel`, `tel_2`) VALUES
-(1, 'jothbc@gmail.com', '887caadc3642e304ede659b734f79b00', 'Atacadao', 123456789, '+5547997432978', NULL),
-(2, 'adm.supercorreia@gmail.com', '30d411fdc0e6daf092a74354094359bb', 'Joivile', 20555189000196, '33666407', NULL),
-(3, 'a@test.com', '202cb962ac59075b964b07152d234b70', 'a test', 123654987, '123', NULL),
-(4, 'b@test.com', '202cb962ac59075b964b07152d234b70', 'b test', 321654789, '123', NULL);
 
 -- --------------------------------------------------------
 
@@ -166,13 +118,6 @@ CREATE TABLE `fornecedor_clientes` (
   `cliente_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Extraindo dados da tabela `fornecedor_clientes`
---
-
-INSERT INTO `fornecedor_clientes` (`id`, `fornecedor_id`, `cliente_id`) VALUES
-(5, 1, 1),
-(12, 1, 6);
 
 -- --------------------------------------------------------
 
@@ -8867,8 +8812,7 @@ INSERT INTO `status_pedido` (`id`, `descricao`) VALUES
 --
 ALTER TABLE `cliente`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`),
-  ADD UNIQUE KEY `cnpj` (`cnpj`);
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- Índices para tabela `cotacao_cliente_info`
@@ -8893,7 +8837,6 @@ ALTER TABLE `cotacao_fornecedor_lista`
 --
 ALTER TABLE `fornecedor`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `cnpj` (`cnpj`),
   ADD UNIQUE KEY `email` (`email`);
 
 --
@@ -8922,37 +8865,37 @@ ALTER TABLE `status_pedido`
 -- AUTO_INCREMENT de tabela `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=0;
 
 --
 -- AUTO_INCREMENT de tabela `cotacao_cliente_info`
 --
 ALTER TABLE `cotacao_cliente_info`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=0;
 
 --
 -- AUTO_INCREMENT de tabela `cotacao_cliente_lista`
 --
 ALTER TABLE `cotacao_cliente_lista`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=0;
 
 --
 -- AUTO_INCREMENT de tabela `cotacao_fornecedor_lista`
 --
 ALTER TABLE `cotacao_fornecedor_lista`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=0;
 
 --
 -- AUTO_INCREMENT de tabela `fornecedor`
 --
 ALTER TABLE `fornecedor`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=0;
 
 --
 -- AUTO_INCREMENT de tabela `fornecedor_clientes`
 --
 ALTER TABLE `fornecedor_clientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=0;
 
 --
 -- AUTO_INCREMENT de tabela `produto`

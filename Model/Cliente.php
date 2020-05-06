@@ -40,6 +40,26 @@ class Cliente extends Model
         }
     }
 
+    public function procurarCliente($desc){
+        try{
+            $query = "SELECT 
+                            id,company_name,cnpj 
+                        FROM 
+                            cliente 
+                        WHERE 
+                            (company_name LIKE :comp) OR (cnpj = :cnpj)
+                        ORDER BY
+                            company_name";
+            $stmt= $this->con->prepare($query);
+            $stmt->bindValue(":comp",'%'.$desc.'%');
+            $stmt->bindValue(":cnpj",$desc);
+            $stmt->execute();
+            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }catch(\PDOException $e){
+            echo '<p>'.$e->getMessage().'<\p>';
+        }
+    }
+
     public function getClientePorEmail(){
         try {
             $query = 'SELECT 
