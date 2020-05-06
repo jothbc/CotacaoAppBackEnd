@@ -26,7 +26,27 @@
            }
         }
 
-        public function getInfo(){
+        public function autenticar2(){
+            try{
+                 $query = 'SELECT 
+                             company_name
+                         FROM 
+                             fornecedor
+                         WHERE 
+                             id = ? AND
+                             pass = ?';
+                 $stmt = $this->con->prepare($query);
+                 $stmt->bindValue(1,$this->__get('id'));
+                 $stmt->bindValue(2,$this->__get('pass'));
+                 $stmt->execute();
+                 return $stmt->fetch(\PDO::FETCH_ASSOC);
+            }catch(\PDOException $e){
+                 echo $e;
+            }
+         }
+
+        
+         public function getInfo(){
             try{
                 $query = 'SELECT 
                             email,
@@ -197,6 +217,49 @@
                 }
             }catch(\PDOException $e){
 
+            }
+        }
+
+        public function atualizarCadastro(){
+            try{
+                $query = 'UPDATE
+                            fornecedor
+                        SET
+                            company_name = :company_name,
+                            cnpj = :cnpj,
+                            tel = :tel,
+                            tel_2 = :tel2,
+                            email = :email
+                        WHERE
+                            id = :id';
+                $stmt = $this->con->prepare($query);
+                $stmt->bindValue(':company_name',$this->__get('company_name'));
+                $stmt->bindValue(':cnpj',$this->__get('cnpj'));
+                $stmt->bindValue(':tel',$this->__get('tel'));
+                $stmt->bindValue(':tel2',$this->__get('tel2'));
+                $stmt->bindValue(':email',$this->__get('email'));
+                $stmt->bindValue(':id',$this->__get('id'));
+                return $stmt->execute();
+            }catch(\PDOException $e){
+                echo '<p>'.$e->getMessage().'</p>';
+                return false;
+            }
+        }
+        public function atualizarSenha(){
+            try{
+                $query = 'UPDATE
+                            fornecedor
+                        SET
+                            pass = :pass
+                        WHERE
+                            id = :id';
+                $stmt = $this->con->prepare($query);
+                $stmt->bindValue(':pass',$this->__get('pass'));
+                $stmt->bindValue(':id',$this->__get('id'));
+                return $stmt->execute();
+            }catch(\PDOException $e){
+                echo '<p>'.$e->getMessage().'</p>';
+                return false;
             }
         }
 
