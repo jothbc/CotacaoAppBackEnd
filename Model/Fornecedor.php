@@ -170,7 +170,7 @@
                                 p.descricao, 
                                 co.valor, 
                                 co.aprovado, 
-                                co.obs 
+                                co.obs
                             FROM 
                                 cotacao_fornecedor_lista as co
                                 LEFT JOIN produto as p
@@ -245,6 +245,7 @@
                 return false;
             }
         }
+        
         public function atualizarSenha(){
             try{
                 $query = 'UPDATE
